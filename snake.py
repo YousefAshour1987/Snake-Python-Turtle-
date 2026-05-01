@@ -20,26 +20,43 @@ def playing_area():
 class Head(Turtle):
   def __init__(self, screen, body):
     super().__init__()
-    pass
+    self.ht()
+    self.speed(0)
+    self.hue = color
+    self.color(color)
+    self.penup()
+    self.goto(x,y)
+    self.setheading(90)
+    self.shape("square")
+    self.alive = True
+    self.st()
+    screen.onkeypress(self.turn_left, left_key)
+    screen.onkeypress(self.turn_right, right_key)
+    screen.onkeypress(self.turn_up, up_key)
+    screen.onkeypress(self.turn_down, down_key)
 
   def up(self):
-    pass
+    self.seth(90)
 
   def down(self):
-    pass
+    self.seth(270)
 
   def left(self):
-    pass
+    self.seth(180)
 
   def right(self):
-    pass
+    self.seth(0)
 
   def move(self):
-    pass
+    self.forward(4)
+    if self.xcor() > 230 or self.xcor() < -230:
+        self.setheading(180 - self.heading())
+    if self.ycor() > 230 or self.ycor() < -230:
+        self.setheading(-self.heading())
     
-  def die(self):
-    pass
-
+  def die(self):    
+    self.alive = False
+    self.hideturtle()
 
 class Segment(Turtle):
   def __init__(self, other):
