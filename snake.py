@@ -20,16 +20,13 @@ def playing_area():
 class Head(Turtle):
   def __init__(self, screen, body):
     super().__init__()
-    self.ht()
-    self.speed(0)
-    self.hue = color
-    self.color(color)
-    self.penup()
-    self.goto(x,y)
-    self.setheading(90)
     self.shape("square")
+    self.color("green")
+    self.penup()
+    self.goto(0,0)
+    self.setheading(90)
     self.alive = True
-    self.st()
+    self.direction("Up", "Down", "Left", "Right")
     screen.onkeypress(self.turn_left, left_key)
     screen.onkeypress(self.turn_right, right_key)
     screen.onkeypress(self.turn_up, up_key)
@@ -37,22 +34,36 @@ class Head(Turtle):
 
   def up(self):
     self.seth(90)
+    self.direction("Up")
+    if self.direction == "Down":
+      self.direction = "Up"
+    elif self.direction != "Down":
+      self.direction = "Up"
 
   def down(self):
     self.seth(270)
+    self.direction("Down")
+    if self.direction == "Up":
+      self.direction = "Down"
+    elif self.direction != "Up":
+      self.direction = "Down"
 
   def left(self):
     self.seth(180)
+    self.direction("Left")
 
   def right(self):
     self.seth(0)
+    self.direction("Right")
 
   def move(self):
-    self.forward(4)
+    self.forward(20)
     if self.xcor() > 230 or self.xcor() < -230:
-        self.setheading(180 - self.heading())
+        self.alive = False
+        self.ht
     if self.ycor() > 230 or self.ycor() < -230:
-        self.setheading(-self.heading())
+        self.alive = False
+        self.ht
     
   def die(self):    
     self.alive = False
@@ -82,6 +93,9 @@ screen.listen()
 
 body = []
 
+while True:
+  for i in range(len(body)-1, 0, 1):
+    body[i].move(body[i-1])
 
 screen.exitonclick()
 
