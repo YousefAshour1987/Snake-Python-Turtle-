@@ -1,6 +1,11 @@
 from turtle import *
 import random
 
+screen = Screen()
+screen.bgcolor("black")
+screen.setup(520,520)
+screen.listen()
+
 def generate_color():
     return f"#{random.randint(0, 0xFFFFFF):06x}"
 
@@ -24,84 +29,72 @@ class Head(Turtle):
     self.color("green")
     self.penup()
     self.goto(0,0)
+    self.speed(0)
     self.setheading(90)
     self.alive = True
-    self.direction("Up", "Down", "Left", "Right")
-    screen.onkeypress(self.turn_left, left_key)
-    screen.onkeypress(self.turn_right, right_key)
-    screen.onkeypress(self.turn_up, up_key)
-    screen.onkeypress(self.turn_down, down_key)
+    self.direction = "Right"
+    screen.onkeypress(self.left, "Left")
+    screen.onkeypress(self.right, "Right")
+    screen.onkeypress(self.up, "Up")
+    screen.onkeypress(self.down, "Down")
 
   def up(self):
-    self.seth(90)
-    self.direction("Up")
-    if self.direction == "Down":
+    if self.direction != "Down":
       self.direction = "Up"
-    elif self.direction != "Down":
-      self.direction = "Up"
+      self.seth(90)
 
   def down(self):
-    self.seth(270)
-    self.direction("Down")
-    if self.direction == "Up":
+    if self.direction != "Up":
       self.direction = "Down"
-    elif self.direction != "Up":
-      self.direction = "Down"
-
+      self.seth(270)
   def left(self):
-    self.seth(180)
-    self.direction("Left")
+    if self.direction != "Right":
+      self.direction = "Left"
+      self.seth(180)
 
   def right(self):
-    self.seth(0)
-    self.direction("Right")
+    if self.direction != "Left":
+      self.direction = "Right"
+      self.seth(0)
 
   def move(self):
-    self.forward(20)
-    if self.xcor() > 230 or self.xcor() < -230:
+    if self.alive:
+      self.forward(4)
+      if self.xcor() > 230 or self.xcor() < -230:
         self.alive = False
-        self.ht
-    if self.ycor() > 230 or self.ycor() < -230:
+        self.ht()
+      elif self.ycor() > 230 or self.ycor() < -230:
         self.alive = False
-        self.ht
+        self.ht()
     
   def die(self):    
     self.alive = False
     self.hideturtle()
 
-class Segment(Turtle):
-  def __init__(self, other):
-    super().__init__()
-    pass
-
-  def move(self, other):
-    pass
-
 class Apple(Turtle):
   def __init__(self):
     super().__init__()
-    pass
+    self.shape("circle")
+    self.color("red")
+    self.penup()
+    self.speed(0)
+    self.relocate()
 
   def relocate(self):
-    pass
-
-screen = Screen()
-screen.bgcolor("black")
-screen.setup(520,520)
-# Key Binding. Connects key presses and mouse clicks with function calls
-screen.listen()
+    x = random.randint(-230, 230)
+    y = random.randint(-230, 230)
+    self.goto(x, y)
 
 body = []
+playing_area()
 
-while True:
-  for i in range(len(body)-1, 0, 1):
-    body[i].move(body[i-1])
+snake_head = Head(screen, body)
+apple = Apple()
+while snake_head.alive:
+  snake_head.move()
+  if snake_head.distance(apple) < 20:
+    apple.relocate()
 
-screen.exitonclick()
-
-
-
-
-
+screen.mainloop()
 
 screen.exitonclick()
