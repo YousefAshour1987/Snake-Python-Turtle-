@@ -1,11 +1,6 @@
 from turtle import *
 import random
 
-screen = Screen()
-screen.bgcolor("black")
-screen.setup(520,520)
-screen.listen()
-
 def generate_color():
     return f"#{random.randint(0, 0xFFFFFF):06x}"
 
@@ -70,6 +65,7 @@ class Head(Turtle):
   def die(self):    
     self.alive = False
     self.hideturtle()
+    self.body = []
 
 class Apple(Turtle):
   def __init__(self):
@@ -84,16 +80,28 @@ class Apple(Turtle):
     x = random.randint(-230, 230)
     y = random.randint(-230, 230)
     self.goto(x, y)
+def update():
+  if snake_head.alive:
+    snake_head.move()
+    if snake_head.distance(apple) < 20:
+      apple.relocate()
+
+
+  screen.ontimer(update, 20)
 
 body = []
+
 playing_area()
 
-snake_head = Head(screen, body)
+snake_head = Head(Screen(), body)
+
 apple = Apple()
-while snake_head.alive:
-  snake_head.move()
-  if snake_head.distance(apple) < 20:
-    apple.relocate()
+
+screen = Screen()
+screen.bgcolor("black")
+screen.setup(520,520)
+screen.listen()
+screen.onkey(update, "space")
 
 screen.mainloop()
 
