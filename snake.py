@@ -53,9 +53,12 @@ class Head(Turtle):
       if self.xcor() > 230 or self.xcor() < -230:
         self.alive = False
         self.ht()
+        print("Game over")        
+
       elif self.ycor() > 230 or self.ycor() < -230:
         self.alive = False
         self.ht()
+        print("Game over")        
 
   def add_segment(self):
       new_segment = Segment()
@@ -107,10 +110,16 @@ def update():
     snake_head.move()
     for i in range(len(body)-1, 0, -1):
       body[i].move()
+    for i in range(len(body)-1, 2, -1):
+      if snake_head.distance(body[i]) < 20:
+        snake_head.alive = False
+        print("Game over")        
+        
 
     if snake_head.distance(apple) < 20:
       apple.relocate()
       body.append(Segment(body[-1]))
+    
 
   screen.ontimer(update, 120)
 
