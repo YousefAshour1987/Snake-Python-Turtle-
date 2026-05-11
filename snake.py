@@ -72,12 +72,19 @@ class Head(Turtle):
     self.body = []
 
 class Segment(Turtle):
-  def __init__(self):
+  def __init__(self, other):
     super().__init__()
+    self.ht()
+    self.speed(0)
     self.shape("square")
     self.color("green")
     self.penup()
-    self.body = []
+    self.goto(other.xcor(), other.ycor())
+    self.st()
+    self.other = other
+    
+  def move(self):
+    self.goto(self.other.xcor(), self.other.ycor())
     
 class Apple(Turtle):
   def __init__(self):
@@ -91,39 +98,34 @@ class Apple(Turtle):
     x = random.randint(-230, 230)
     y = random.randint(-230, 230)
     self.goto(x, y)
+
+
+
 def update():
+  global body
   if snake_head.alive:
     snake_head.move()
+    for i in range(len(body)-1, 0, -1):
+      body[i].move()
+
     if snake_head.distance(apple) < 20:
       apple.relocate()
-      snake_head.add_segment()
-  def move(self):
-      if self.alive:
-        head_x = self.xcor(Head())
-        head_y = self.ycor(Head())
-        self.forward(20)
-        for i in range(len(self.body)-1, 0, -1):
-            x = self.body[i-1].xcor(Head)
-            y = self.body[i-1].ycor(Head)
-            self.body[i].goto(x, y)
-        if len(self.body) > 0:
-            self.body[0].goto(head_x, head_y)
+      body.append(Segment(body[-1]))
 
-        for segment in self.body[3:]:
-          if self.distance(segment) < 10:
-            self.ht()
-            self.alive = False
-            break
   screen.ontimer(update, 120)
 
-body = []
-playing_area()
-snake_head = Head(Screen(), body)
-apple = Apple()
 screen = Screen()
 screen.bgcolor("black")
 screen.setup(520,520)
 screen.listen()
 screen.onkey(update, "space")
+
+playing_area()
+
+body = []
+snake_head = Head(Screen(), body)
+body.append(snake_head)
+apple = Apple()
+
 screen.mainloop()
 screen.exitonclick()
